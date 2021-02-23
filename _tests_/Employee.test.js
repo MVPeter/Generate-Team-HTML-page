@@ -24,11 +24,8 @@ describe("Employee", () => {
         });
     
         test('Is employee', () => {
-            const name = "Bob Smith";
-            const id = 30;
-            const email = "bob@bob.com";
             const role = "Employee";
-            const employee = new Employee(name, id, email, role)
-            expect(employee.getRole(role)).toBe(role);
+            const employee = new Employee()
+            expect(employee.getEmployee()).toBe(role);
         });
 });

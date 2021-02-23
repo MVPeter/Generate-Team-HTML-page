@@ -2,21 +2,21 @@ const Employee = require("../lib/Employee");
 const Engineer = require('../lib/Engineer');
 
 describe("Engineer", () => {
-    describe("Employee", () => { 
-    test("Has Name first and last, capitilized", () => {
-        const name = "Bob Smith";
-        const employee = new Employee(name);
-        expect(employee.getName(name)).toBe(name);
-    });
-    
+    describe("Employee", () => {
+        test("Has Name first and last, capitilized", () => {
+            const name = "Bob Smith";
+            const employee = new Employee(name);
+            expect(employee.getName(name)).toBe(name);
+        });
+
         test('Has ID', () => {
             const name = "Bob Smith";
             const id = 30;
             const employee = new Employee(name, id);
             expect(employee.id).toBe(id);
-    
+
         });
-    
+
         test('Has email', () => {
             const name = "Bob Smith";
             const id = 30;
@@ -24,7 +24,13 @@ describe("Engineer", () => {
             const employee = new Employee(name, id, email);
             expect(employee.getEmail(email)).toBe(email);
         });
-});
+    });
+
+    test('Is an Engineer', () => {
+        const role = "Engineer";
+        const engineer = new Engineer()
+        expect(engineer.getEngineer()).toBe(role);
+    });
 
     test('Has GitHub URL', () => {
         const name = "Bob Smith";
