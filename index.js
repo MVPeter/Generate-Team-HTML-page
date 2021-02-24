@@ -1,7 +1,7 @@
 //required modules
 const inquirer = require('inquirer');
 const fs = require('fs');
-const util = require('util');
+
 const Employee = require('./lib/Employee')
 const Engineer = require('./lib/Engineer')
 const Manager = require('./lib/Manager')
@@ -10,8 +10,9 @@ const Intern = require('./lib/Intern')
 //file name and location of output.
 const filePath = "./dist/index.html";
 
+//Begin HTML and Manager Card.
 const managerHTML = (manager) =>
-    `
+`
 <!doctype html>
 <html lang="en">
 
@@ -51,42 +52,45 @@ const managerHTML = (manager) =>
             
 `;
 
+//Engineer Cards.
 const engineerHTML = (engineer) =>
-    `
-<div id="engineer" class="card">
-<div class="card-body bg-light">
-    <div class="card-header bg-info">
-        <h4 class="card-title">Name: ${engineer.name}</h4>
-        <h5 class="card-text">Engineer</h5>
-    </div>
-    <div>
-        <p class="card-text">ID: ${engineer.id}</p>
-        <p class="card-text">Email: <a href="mailto:${engineer.email}">${engineer.email}</a></p>
-        <p class="card-text">GitHub: <a href="${engineer.gitHub}" target="_blank">GitHub Profile</a></p>
-    </div>
-</div>
-</div>
+`
+            <div id="engineer" class="card">
+            <div class="card-body bg-light">
+                <div class="card-header bg-info">
+                    <h4 class="card-title">Name: ${engineer.name}</h4>
+                    <h5 class="card-text">Engineer</h5>
+                </div>
+                <div>
+                    <p class="card-text">ID: ${engineer.id}</p>
+                    <p class="card-text">Email: <a href="mailto:${engineer.email}">${engineer.email}</a></p>
+                    <p class="card-text">GitHub: <a href="https://github.com/${engineer.gitHub}" target="_blank">GitHub Profile</a></p>
+                </div>
+            </div>
+            </div>
 
 `;
 
+//Inter cards
 const internHTML = (intern) =>
-    `
-<div id="intern" class="card">
-<div class="card-body bg-light">
-    <div class="card-header bg-info">
-        <h4 class="card-title">Name: ${intern.name}</h4>
-        <h5 class="card-text">Intern</h5>
-    </div>
-    <div>
-        <p class="card-text">ID: ${intern.id}</p>
-        <p class="card-text">Email: <a href="mailto:${intern.email}">${intern.email}</a></p>
-        <p class="card-text">School: ${intern.school}</p>
-    </div>
-</div>
-</div>
+`
+            <div id="intern" class="card">
+            <div class="card-body bg-light">
+                <div class="card-header bg-info">
+                    <h4 class="card-title">Name: ${intern.name}</h4>
+                    <h5 class="card-text">Intern</h5>
+                </div>
+                <div>
+                    <p class="card-text">ID: ${intern.id}</p>
+                    <p class="card-text">Email: <a href="mailto:${intern.email}">${intern.email}</a></p>
+                    <p class="card-text">School: ${intern.school}</p>
+                </div>
+            </div>
+            </div>
 
 `;
 
+//End of HTML file
 const doneHTML = () =>
     `
 </div>
@@ -110,8 +114,8 @@ const doneHTML = () =>
 
 `;
 
-//write the file.
-// const writeFileAsync = util.promisify(fs.writeFile);
+
+// function to list the card choices and allow Exit.
 const employeeChoice = () => {
     inquirer.prompt([
         {
@@ -122,7 +126,7 @@ const employeeChoice = () => {
         }
     ]).then(choiceAnswer => {
         console.table(choiceAnswer)
-        //write manager to HTML
+        //write Exit to HTML
         if (choiceAnswer.roleChoice === "EXIT") {
             fs.appendFile(filePath, doneHTML(), function (err, result) {
                 if (err) console.log('error', err)
@@ -136,36 +140,9 @@ const employeeChoice = () => {
         if (choiceAnswer.roleChoice === "Intern") {
             //Append Inter to HTML
             internPrompts();
-
-            // } else
-            //     //Write the end of the file to HTML
-            //     console.log("no soup for you")
         }
-    }
-    )
+    })
 };
-
-// function question() {
-//     inquirer.prompt([
-
-//     ]).then(answer => {
-//         // //write manager to HTML
-//         // while (choiceAnswer.roleChoice !== "EXIT") {
-//         //     //append engeneer to HTML
-//         //     if (choiceAnswer.roleChoice === "Engeneer") {
-//         //         engeneerPrompts();
-
-//         //     } else if (choiceAnswer.roleChoice === "Intern") {
-//         //         //Append Inter to HTML
-//         //         internPrompts();
-
-//         //     } else
-//         //         //Write the end of the file to HTML
-//         //         console.log("no soup for you")
-//         // }
-//     }).then()
-//         .catch((err) => console.error(err))
-// }
 
 // array of questions for Manager
 const managerPrompts = () => {
@@ -196,18 +173,15 @@ const managerPrompts = () => {
         console.table(managerAnswers)
         const manager = new Manager(managerAnswers.employeeName, managerAnswers.employeeId, managerAnswers.employeeEmail, managerAnswers.managerOffice);
         const role = manager.getManager();
-        //append Manager card to HTML
-        console.log(manager);
+        // console.log(manager);
         // console.log(manager.getManager());
-        console.log(role);
+        // console.log(role);
+        //write Manager card to HTML
         fs.writeFile(filePath, managerHTML(manager), function (err, result) {
             if (err) console.log('error', err);
         });
-
-
         employeeChoice()
     })
-
         .catch((err) => console.error(err));
 }
 
@@ -233,21 +207,18 @@ const engineerPrompts = () => {
         {
             type: "input",
             name: "engineerGithub",
-            message: "Engineer's GitHub?"
+            message: "Engineer's GitHub Username?"
         },
     ]).then(engineerAnswers => {
         console.table(engineerAnswers)
         const engineer = new Engineer(engineerAnswers.employeeName, engineerAnswers.employeeId, engineerAnswers.employeeEmail, engineerAnswers.engineerGithub);
 
-        console.log(engineer)
-        console.log(engineer.getEngineer())
+        // console.log(engineer)
+        // console.log(engineer.getEngineer())
         fs.appendFile(filePath, engineerHTML(engineer), function (err, result) {
             if (err) console.log('error', err);
         });
-
         employeeChoice()
-
-
     })
         .catch((err) => console.error(err));
 }
@@ -280,8 +251,8 @@ const internPrompts = () => {
         console.table(internAnswers)
         const intern = new Intern(internAnswers.employeeName, internAnswers.employeeId, internAnswers.employeeEmail, internAnswers.internSchool);
 
-        console.log(intern)
-        console.log(intern.getIntern())
+        // console.log(intern)
+        // console.log(intern.getIntern())
         fs.appendFile(filePath, internHTML(intern), function (err, result) {
             if (err) console.log('error', err);
         });
