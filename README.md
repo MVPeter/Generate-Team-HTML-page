@@ -19,7 +19,7 @@
 
   This project runs in Node.  It will ask you questions about your team and create an HTML page.  Each team member will be their own card.
   
-  ![ScreenShot](./assets/screenshot.jpg?thumbnail)
+  ![ScreenShot](./assets/screenshot.jpg | width=250)
 
   ---
   
