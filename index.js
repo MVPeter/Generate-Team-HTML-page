@@ -8,10 +8,10 @@ const Manager = require('./lib/Manager')
 const Intern = require('./lib/Intern')
 
 //file name and location of output.
-const filePath = "../dist/";
+const filePath = "./dist/index.html";
 
-const managerHTML = answers =>
-`
+const managerHTML = (manager) =>
+    `
 <!doctype html>
 <html lang="en">
 
@@ -26,66 +26,69 @@ const managerHTML = answers =>
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-<body>
+<body class= "bg-secondary">
     <div class="jumbotron jumbotron-fluid mb-0">
         <div class="container">
-            <h1 class="display-3">Engineering Team</h1>
+            <h1 class="display-3">${manager.name}'s Engineering Team</h1>
             <hr class="my-2">
         </div>
     </div>
-    <div class="container-fluid bg-secondary mt-2">
+    <div class="container-fluid bg-secondary mt-2 mb-2">
         <div id="cards" class="card-columns">
             <div id="manager" class="card">
                 <div class="card-body bg-light">
                     <div class="card-header bg-info">
-                        <h4 class="card-title">Name: ${managerAnswers.employeeName}</h4>
+                        <h4 class="card-title">Name: ${manager.name}</h4>
                         <h5 class="card-text">Manager </h5>
                     </div>
                     <div>
-                        <p class="card-text">ID: ${managerAnswers.employeeId}</p>
-                        <p class="card-text">EMail: ${managerAnswers.employeeEmail}</p>
-                        <p class="card-text">Office Number: ${managerAnswers.managerOffice}</p>
+                        <p class="card-text">ID: ${manager.id}</p>
+                        <p class="card-text">Email: <a href="mailto:${manager.email}">${manager.email}</a></p>
+                        <p class="card-text">Office Number: ${manager.officeNumber}</p>
                     </div>
                 </div>
             </div>
+            
 `;
 
-const engineerHTML = (answers) =>
-`
+const engineerHTML = (engineer) =>
+    `
 <div id="engineer" class="card">
 <div class="card-body bg-light">
     <div class="card-header bg-info">
-        <h4 class="card-title">Name: ${engeneerAnswers.employeeName}</h4>
-        <h5 class="card-text">Engeneer </h5>
+        <h4 class="card-title">Name: ${engineer.name}</h4>
+        <h5 class="card-text">Engineer</h5>
     </div>
     <div>
-        <p class="card-text">ID: ${engeneerAnswers.employeeId}</p>
-        <p class="card-text">EMail: ${engeneerAnswers.employeeEmail}</p>
-        <p class="card-text">GitHub: ${engeneerAnswers.engeneerGithub}</p>
+        <p class="card-text">ID: ${engineer.id}</p>
+        <p class="card-text">Email: <a href="mailto:${engineer.email}">${engineer.email}</a></p>
+        <p class="card-text">GitHub: <a href="${engineer.gitHub}" target="_blank">GitHub Profile</a></p>
     </div>
 </div>
 </div>
-`
 
-const internHTML = (answers) =>
-`
+`;
+
+const internHTML = (intern) =>
+    `
 <div id="intern" class="card">
 <div class="card-body bg-light">
     <div class="card-header bg-info">
-        <h4 class="card-title">Name:${internAnswers.employeeName}</h4>
-        <h5 class="card-text">Title Intern</h5>
+        <h4 class="card-title">Name: ${intern.name}</h4>
+        <h5 class="card-text">Intern</h5>
     </div>
     <div>
-        <p class="card-text">ID: ${internAnswers.employeeId}</p>
-        <p class="card-text">EMail: ${internAnswers.employeeEmail}</p>
-        <p class="card-text">School: ${internAnswers.internSchool}</p>
+        <p class="card-text">ID: ${intern.id}</p>
+        <p class="card-text">Email: <a href="mailto:${intern.email}">${intern.email}</a></p>
+        <p class="card-text">School: ${intern.school}</p>
     </div>
 </div>
 </div>
-`
 
-const doneHTML = (answers) =>
-`
+`;
+
+const doneHTML = () =>
+    `
 </div>
 
 </div>
@@ -104,7 +107,8 @@ const doneHTML = (answers) =>
 </body>
 
 </html>
-`
+
+`;
 
 //write the file.
 // const writeFileAsync = util.promisify(fs.writeFile);
@@ -114,27 +118,32 @@ const employeeChoice = () => {
             type: "list",
             name: "roleChoice",
             message: "Do you want add one of the following or exit? ",
-            choices: ["Engeneer", "Intern", "EXIT"]
+            choices: ["Engineer", "Intern", "EXIT"]
         }
     ]).then(choiceAnswer => {
         console.table(choiceAnswer)
         //write manager to HTML
-        if (choiceAnswer.roleChoice !== "EXIT") {
-            //append engeneer to HTML
-            if (choiceAnswer.roleChoice === "Engeneer") {
-                engeneerPrompts();
-
-            } else if (choiceAnswer.roleChoice === "Intern") {
-                //Append Inter to HTML
-                internPrompts();
-
-            } else
-                //Write the end of the file to HTML
-                console.log("no soup for you")
+        if (choiceAnswer.roleChoice === "EXIT") {
+            fs.appendFile(filePath, doneHTML(), function (err, result) {
+                if (err) console.log('error', err)
+            });
         }
+        //append engineer to HTML
+        if (choiceAnswer.roleChoice === "Engineer") {
+            engineerPrompts();
 
-    })
-}
+        }
+        if (choiceAnswer.roleChoice === "Intern") {
+            //Append Inter to HTML
+            internPrompts();
+
+            // } else
+            //     //Write the end of the file to HTML
+            //     console.log("no soup for you")
+        }
+    }
+    )
+};
 
 // function question() {
 //     inquirer.prompt([
@@ -185,27 +194,31 @@ const managerPrompts = () => {
 
     ]).then(managerAnswers => {
         console.table(managerAnswers)
-        const employee = new Employee(managerAnswers.employeeName, managerAnswers.employeeId, managerAnswers.employeeEmail, managerAnswers.managerOffice);
+        const manager = new Manager(managerAnswers.employeeName, managerAnswers.employeeId, managerAnswers.employeeEmail, managerAnswers.managerOffice);
+        const role = manager.getManager();
         //append Manager card to HTML
+        console.log(manager);
+        // console.log(manager.getManager());
+        console.log(role);
+        fs.writeFile(filePath, managerHTML(manager), function (err, result) {
+            if (err) console.log('error', err);
+        });
 
-        console.log(employee)
-        console.log(employee.returnName())
 
-        
         employeeChoice()
     })
 
         .catch((err) => console.error(err));
 }
 
-//array of questions for Engeneer
-const engeneerPrompts = () => {
+//array of questions for Engineer
+const engineerPrompts = () => {
 
     inquirer.prompt([
         {
             type: "input",
             name: "employeeName",
-            message: "Engeneerr's name?"
+            message: "Engineerr's name?"
         },
         {
             type: "input",
@@ -215,19 +228,23 @@ const engeneerPrompts = () => {
         {
             type: "input",
             name: "employeeEmail",
-            message: "Engeneer's email?"
+            message: "Engineer's email?"
         },
         {
             type: "input",
-            name: "engeneerGithub",
-            message: "Engeneer's GitHub?"
+            name: "engineerGithub",
+            message: "Engineer's GitHub?"
         },
-    ]).then(engeneerAnswers => {
-        console.table(engeneerAnswers)
-        const employee = new Employee(engeneerAnswers.employeeName, engeneerAnswers.employeeId, engeneerAnswers.employeeEmail, engeneerAnswers.engeneerGithub);
+    ]).then(engineerAnswers => {
+        console.table(engineerAnswers)
+        const engineer = new Engineer(engineerAnswers.employeeName, engineerAnswers.employeeId, engineerAnswers.employeeEmail, engineerAnswers.engineerGithub);
 
-        console.log(employee)
-        console.log(employee.returnName())
+        console.log(engineer)
+        console.log(engineer.getEngineer())
+        fs.appendFile(filePath, engineerHTML(engineer), function (err, result) {
+            if (err) console.log('error', err);
+        });
+
         employeeChoice()
 
 
@@ -261,10 +278,13 @@ const internPrompts = () => {
         },
     ]).then(internAnswers => {
         console.table(internAnswers)
-        const employee = new Employee(internAnswers.employeeName, internAnswers.employeeId, internAnswers.employeeEmail, internAnswers.internSchool);
+        const intern = new Intern(internAnswers.employeeName, internAnswers.employeeId, internAnswers.employeeEmail, internAnswers.internSchool);
 
-        console.log(employee)
-        console.log(employee.returnName())
+        console.log(intern)
+        console.log(intern.getIntern())
+        fs.appendFile(filePath, internHTML(intern), function (err, result) {
+            if (err) console.log('error', err);
+        });
         employeeChoice()
     })
         .catch((err) => console.error(err));

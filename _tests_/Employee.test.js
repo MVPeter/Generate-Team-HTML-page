@@ -26,6 +26,6 @@ describe("Employee", () => {
         test('Is employee', () => {
             const role = "Employee";
             const employee = new Employee()
-            expect(employee.getEmployee()).toBe(role);
+            expect(employee.getRole()).toBe(role);
         });
 });

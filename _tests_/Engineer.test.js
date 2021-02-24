@@ -29,7 +29,7 @@ describe("Engineer", () => {
     test('Is an Engineer', () => {
         const role = "Engineer";
         const engineer = new Engineer()
-        expect(engineer.getEngineer()).toBe(role);
+        expect(engineer.getRole()).toBe(role);
     });
 
     test('Has GitHub URL', () => {

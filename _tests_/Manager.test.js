@@ -31,7 +31,7 @@ describe("Manager", () => {
     test('Is an Manager', () => {
         const role = "Manager";
         const manager = new Manager()
-        expect(manager.getManager()).toBe(role);
+        expect(manager.getRole()).toBe(role);
     });
 
     test('Has office number', () => {

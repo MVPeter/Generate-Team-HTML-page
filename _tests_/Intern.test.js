@@ -30,7 +30,7 @@ describe("Intern", () => {
     test('Is an Intern', () => {
         const role = "Intern";
         const intern = new Intern()
-        expect(intern.getIntern()).toBe(role);
+        expect(intern.getRole()).toBe(role);
     });
 
     test('Has school name', () => {
