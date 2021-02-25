@@ -40,7 +40,7 @@ const managerHTML = (manager) =>
                 <div class="card-body bg-light">
                     <div class="card-header bg-info">
                         <h4 class="card-title">Name: ${manager.name}</h4>
-                        <h5 class="card-text">Manager </h5>
+                        <h5 class="card-text">${manager.role} </h5>
                     </div>
                     <div>
                         <p class="card-text">ID: ${manager.id}</p>
@@ -59,7 +59,7 @@ const engineerHTML = (engineer) =>
             <div class="card-body bg-light">
                 <div class="card-header bg-info">
                     <h4 class="card-title">Name: ${engineer.name}</h4>
-                    <h5 class="card-text">Engineer</h5>
+                    <h5 class="card-text">${engineer.role}</h5>
                 </div>
                 <div>
                     <p class="card-text">ID: ${engineer.id}</p>
@@ -78,7 +78,7 @@ const internHTML = (intern) =>
             <div class="card-body bg-light">
                 <div class="card-header bg-info">
                     <h4 class="card-title">Name: ${intern.name}</h4>
-                    <h5 class="card-text">Intern</h5>
+                    <h5 class="card-text">${intern.role}</h5>
                 </div>
                 <div>
                     <p class="card-text">ID: ${intern.id}</p>
@@ -172,10 +172,11 @@ const managerPrompts = () => {
     ]).then(managerAnswers => {
         console.table(managerAnswers)
         const manager = new Manager(managerAnswers.employeeName, managerAnswers.employeeId, managerAnswers.employeeEmail, managerAnswers.managerOffice);
-        const role = manager.getManager();
+        manager.role = manager.getRole()
         // console.log(manager);
         // console.log(manager.getManager());
         // console.log(role);
+        
         //write Manager card to HTML
         fs.writeFile(filePath, managerHTML(manager), function (err, result) {
             if (err) console.log('error', err);
@@ -212,9 +213,11 @@ const engineerPrompts = () => {
     ]).then(engineerAnswers => {
         console.table(engineerAnswers)
         const engineer = new Engineer(engineerAnswers.employeeName, engineerAnswers.employeeId, engineerAnswers.employeeEmail, engineerAnswers.engineerGithub);
-
+        engineer.role = engineer.getRole()
         // console.log(engineer)
         // console.log(engineer.getEngineer())
+
+        //write enginer to Html
         fs.appendFile(filePath, engineerHTML(engineer), function (err, result) {
             if (err) console.log('error', err);
         });
@@ -250,7 +253,7 @@ const internPrompts = () => {
     ]).then(internAnswers => {
         console.table(internAnswers)
         const intern = new Intern(internAnswers.employeeName, internAnswers.employeeId, internAnswers.employeeEmail, internAnswers.internSchool);
-
+        intern.role = intern.getRole()
         // console.log(intern)
         // console.log(intern.getIntern())
         fs.appendFile(filePath, internHTML(intern), function (err, result) {
